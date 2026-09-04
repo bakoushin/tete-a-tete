@@ -8,5 +8,8 @@
     "rootRegistry": "0x8115186E8f2E0B0281e86ab91f0f48Ba90364354",
     "ethRegistry": "0xBDC85dD5b15D7ecb354cd7cb6f2c50b4f2c4F0E2",
     "setResolverTx": "0x69675a440b54d163c0a42ee9d140a91f908e9bdbda6fe54910bd68797bc5b822"
-  }
+  },
+  "gatewayUrl": "https://tete-a-tete-eth.vercel.app/api/ccip/{sender}/{data}",
+  "setUrlsTx": "0xb676411613d592dd5e9ebc8a78b2db1f0955ce0c40831c284b37274a2a76e573",
+  "app": "https://tete-a-tete-eth.vercel.app"
 }

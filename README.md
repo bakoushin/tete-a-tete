@@ -2,6 +2,8 @@
 
 **Private pairwise channels resolved through ENS.**
 
+Live: **https://tete-a-tete-eth.vercel.app** (Sepolia) · Resolver: [`0x56E996B6…`](https://sepolia.etherscan.io/address/0x56E996B6f96B79eF02Ac16afB92660293B52460A) · Parent: `tete-a-tete.eth`
+
 ENS gives every identity a public place. Tête-à-tête gives every *pair* a private one. Two names each compute a shared secret subname under `tete-a-tete.eth` that nobody registers or announces, and use it as an encrypted, weekly-expiring mailbox — read through standard ENS resolution. The app remembers nothing but your key.
 
 Built for the ENS privacy bounty (Common S3nse × ENS Labs, Amsterdam, September 2026). Runs on **Sepolia, on the ENSv2 beta deployment**: names are registered through [app.ens.dev](https://app.ens.dev), resolution goes through the ENSv2 Universal Resolver, and the parent name's resolver is set on the ENSv2 ETH registry.
@@ -80,7 +82,7 @@ pnpm dev                                         # http://localhost:3000 — UI 
 pnpm --filter web smoke                          # signed write + CCIP read against the running gateway
 ```
 
-Without Upstash credentials the gateway keeps records in memory (dev only). Append `?now=2026-09-12T10:00:00Z` to the URL to shift the demo clock and watch the label rotate.
+Without Upstash credentials the gateway keeps records in memory (dev only). Note that reads always go through the gateway URL stored on-chain (currently the live deployment), so a local gateway only serves reads after `setUrls()` points at it. Append `?now=2026-09-12T10:00:00Z` to the URL to shift the demo clock and watch the label rotate.
 
 ## Deploy
 
