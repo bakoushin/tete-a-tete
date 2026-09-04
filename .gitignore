@@ -11,3 +11,5 @@ packages/contracts/out/
 packages/contracts/cache/
 packages/contracts/broadcast/**/dry-run/
 packages/contracts/lib/
+.vercel
+.env*
