@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { clockOffsetMs } from "@/lib/clock";
 import { createIdentity, loadContacts, loadIdentity, loadOwnName, saveOwnName, setActiveWallet } from "@/lib/identity";
 import { ChannelSession } from "@/lib/channel";
-import { readRdvKey } from "@/lib/ens";
+import { publishRdvKey, readRdvKey } from "@/lib/ens";
 import { EnableCard } from "./enable";
 import { HomeCard } from "./home";
 import { ChannelView } from "./channel-view";
@@ -104,6 +104,19 @@ export function App() {
     saveOwnName(name);
   };
 
+  const [rotating, setRotating] = useState(false);
+  const rotateAndPublish = async () => {
+    if (!wallet || !myName) return;
+    setRotating(true);
+    try {
+      const id = await rotate();
+      await publishRdvKey(wallet, myName, id.publicKey);
+      setKeyAgeDays(0);
+    } finally {
+      setRotating(false);
+    }
+  };
+
   const rotate = async () => {
     const id = await createIdentity();
     sessions.forEach((s) => s.stop());
@@ -164,8 +177,11 @@ export function App() {
       ) : (
         <>
           {keyAgeDays >= ROTATE_AFTER_DAYS && (
-            <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm">
-              Your key is {keyAgeDays} days old. Rotate it (one transaction) to bound what a leak could expose.
+            <div className="flex items-center justify-between gap-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm">
+              <span>Your key is {keyAgeDays} days old. Rotate it (one transaction) to bound what a leak could expose.</span>
+              <Button size="sm" variant="outline" disabled={rotating || !wallet} onClick={() => void rotateAndPublish()}>
+                {rotating ? "Confirm in wallet…" : "Rotate key"}
+              </Button>
             </div>
           )}
           <HomeCard
