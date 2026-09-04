@@ -1,0 +1,13 @@
+node_modules/
+.next/
+dist/
+out/
+.env
+.env.local
+.env*.local
+*.log
+.DS_Store
+packages/contracts/out/
+packages/contracts/cache/
+packages/contracts/broadcast/**/dry-run/
+packages/contracts/lib/

@@ -1,0 +1,12 @@
+{
+  "chainId": 11155111,
+  "RendezvousResolver": "0x56E996B6f96B79eF02Ac16afB92660293B52460A",
+  "gatewaySigner": "0x60627fFFfBCCd3cdD78aC8312669e3B0347e97f9",
+  "parentName": "tete-a-tete.eth",
+  "ensv2": {
+    "universalResolver": "0xeeeeeeee14d718c2b47d9923deab1335e144eeee",
+    "rootRegistry": "0x8115186E8f2E0B0281e86ab91f0f48Ba90364354",
+    "ethRegistry": "0xBDC85dD5b15D7ecb354cd7cb6f2c50b4f2c4F0E2",
+    "setResolverTx": "0x69675a440b54d163c0a42ee9d140a91f908e9bdbda6fe54910bd68797bc5b822"
+  }
+}
