@@ -4,6 +4,8 @@
 
 Live: **https://tete-a-tete-eth.vercel.app** (Sepolia) · Resolver: [`0x56E996B6…`](https://sepolia.etherscan.io/address/0x56E996B6f96B79eF02Ac16afB92660293B52460A) · Parent: `tete-a-tete.eth`
 
+![Tête-à-tête: pierre.eth chatting with marie.eth at a secret subname](docs/screenshot.png)
+
 ENS gives every identity a public place. Tête-à-tête gives every *pair* a private one. Two names each compute a shared secret subname under `tete-a-tete.eth` that nobody registers or announces, and use it as an encrypted, weekly-expiring mailbox — read through standard ENS resolution. The app remembers nothing but your key.
 
 Runs on **Sepolia, on the ENSv2 beta deployment**: names are registered through [app.ens.dev](https://app.ens.dev), resolution goes through the ENSv2 Universal Resolver, and the parent name's resolver is set on the ENSv2 ETH registry.
