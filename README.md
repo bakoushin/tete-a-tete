@@ -6,7 +6,7 @@ Live: **https://tete-a-tete-eth.vercel.app** (Sepolia) · Resolver: [`0x56E996B6
 
 ENS gives every identity a public place. Tête-à-tête gives every *pair* a private one. Two names each compute a shared secret subname under `tete-a-tete.eth` that nobody registers or announces, and use it as an encrypted, weekly-expiring mailbox — read through standard ENS resolution. The app remembers nothing but your key.
 
-Built for the ENS privacy bounty (Common S3nse × ENS Labs, Amsterdam, September 2026). Runs on **Sepolia, on the ENSv2 beta deployment**: names are registered through [app.ens.dev](https://app.ens.dev), resolution goes through the ENSv2 Universal Resolver, and the parent name's resolver is set on the ENSv2 ETH registry.
+Runs on **Sepolia, on the ENSv2 beta deployment**: names are registered through [app.ens.dev](https://app.ens.dev), resolution goes through the ENSv2 Universal Resolver, and the parent name's resolver is set on the ENSv2 ETH registry.
 
 ## How it works
 
@@ -41,26 +41,9 @@ text(namehash("<label>.tete-a-tete.eth"), "rdv")
 | Contacts on this device | anyone with the browser | not stored by default ("remember" is opt-in, names only) |
 | Past traffic after `R` leaks | attacker | bounded to the current 30-day rotation window |
 
-## Limitations (honest version)
+## Gateway API
 
-- The gateway sees IP-level co-access of labels. Mitigations: fixed poll cadence (1 s visible / 10 s hidden regardless of activity), batch endpoint, multiple gateways, proxying.
-- Traffic shape (write timing) is visible. Payload size is not: every record is exactly 16 424 bytes.
-- Gateway liveness/censorship: anyone can run a gateway; the resolver owner can list several. An on-chain fallback store is not built.
-- `rdv-key` substitution by whoever controls a name's resolver: the app pins the key seen when a channel is opened and warns on change.
-- No inbox, no notifications, pairwise only. First contact needs one out-of-band nudge ("add me as marie.eth").
-- Lost device = lost `R`. Rotate; history is gone unless remembered locally.
-
-## Repository
-
-```
-packages/core        protocol + crypto (TypeScript, browser + Node): HKDF derivation, XChaCha20-Poly1305 + padding,
-                     X25519 identity (WebCrypto, noble fallback), Ed25519 write auth, ENS helpers. vitest.
-packages/contracts   Foundry: RendezvousResolver (ENSIP-10 + EIP-3668, signed responses), deploy script, tests.
-apps/web             Next.js app: the client UI and the CCIP-Read gateway (route handlers under /api),
-                     stateless on top of Upstash Redis. Deployable as one unit (Stasho App VM, Vercel, any Node host).
-```
-
-Gateway API (any host can run one; the resolver lists the URL on-chain):
+Any host can run one; the resolver lists the URL on-chain.
 
 | Route | Purpose |
 |---|---|
@@ -102,12 +85,3 @@ cast send $ETH_REGISTRY 'setResolver(uint256,address)' $(cast keccak tete-a-tete
 or open `/admin` in the app with the owner wallet. The live registry is discovered from the Universal Resolver (`findParentRegistry`). Addresses used for this deployment are in `packages/contracts/deployments/sepolia.json`. Change the gateway later with `setUrls()` / `setSigners()` — no redeploy.
 
 **App + gateway.** One Next.js app with `output: "standalone"`; needs `GATEWAY_SIGNER_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` and the `NEXT_PUBLIC_*` values. Works on a [Stasho](https://stasho.xyz) App VM (self-custodial, Aleph), on Vercel, or any Node host. After deploying, point the resolver at `https://<host>/api/ccip/{sender}/{data}` with `setUrls()`.
-
-## Demo script
-
-1. Marie enables (one tx). Pierre already enabled.
-2. Marie opens `pierre.eth`, sends. Pierre opens `marie.eth`, sees it within a second.
-3. "What's public?": the resolver on-chain and the gateway record — random label, fixed-size ciphertext, random writer key, no names.
-4. Recompute the label live from both `rdv-key` records and the local private key.
-5. Reload Marie's tab → blank slate. Type `pierre.eth` → chat restored from the gateway.
-6. Add `?now=` a week ahead → new label, last week's records gone.
